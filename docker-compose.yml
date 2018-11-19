@@ -15,7 +15,8 @@ services:
         #image: php5_apache
         build: ./php5_apache
         volumes:
-            - /var/www/html:/var/www/html/
+            #- /var/www/html:/var/www/html/
+            - ./www:/var/www/html/
         links:
             - db
         restart: always
@@ -25,14 +26,14 @@ services:
         ports:
             - "3306:3306"
         environment:
-            MYSQL_DATABASE: sarjmatik
-            MYSQL_USER: kioskttdbuser
-            MYSQL_PASSWORD: DbYc5.24
-            MYSQL_ROOT_PASSWORD: DbYc5.24
+            MYSQL_DATABASE: myDb
+            MYSQL_USER: user
+            MYSQL_PASSWORD: test
+            MYSQL_ROOT_PASSWORD: test
         restart: always
         volumes:
             - ./dump:/docker-entrypoint-initdb.d
-            - /var/lib/mysql:/var/lib/mysql
+            #- /var/lib/mysql:/var/lib/mysql
     phpmyadmin:
         depends_on:
             - reverseproxy
@@ -43,9 +44,9 @@ services:
          #   - 8000:80
         environment:
             PMA_ABSOLUTE_URI: http://your_server_name_or_ip_address/pma/
-            MYSQL_USER: kioskttdbuser
-            MYSQL_PASSWORD: DbYc5.24
-            MYSQL_ROOT_PASSWORD: DbYc5.24
+            MYSQL_USER: user
+            MYSQL_PASSWORD: test
+            MYSQL_ROOT_PASSWORD: test 
             PMA_HOST: db
-#volumes:
-#    persistent:
+volumes:
+    persistent:
