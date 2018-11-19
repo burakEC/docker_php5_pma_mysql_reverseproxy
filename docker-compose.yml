@@ -1,0 +1,51 @@
+version: "2"
+services:
+    reverseproxy:
+        container_name: reverseproxy
+        #image: reverseproxy
+        build: ./reverseproxy
+        ports:
+            - 80:80
+            - 443:443
+        restart: always
+    www:
+        depends_on:
+            - reverseproxy
+        container_name: php5_apache
+        #image: php5_apache
+        build: ./php5_apache
+        volumes:
+            - /var/www/html:/var/www/html/
+        links:
+            - db
+        restart: always
+    db:
+        container_name: mysql5
+        image: mysql:5.7.13
+        ports:
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: sarjmatik
+            MYSQL_USER: kioskttdbuser
+            MYSQL_PASSWORD: DbYc5.24
+            MYSQL_ROOT_PASSWORD: DbYc5.24
+        restart: always
+        volumes:
+            - ./dump:/docker-entrypoint-initdb.d
+            - /var/lib/mysql:/var/lib/mysql
+    phpmyadmin:
+        depends_on:
+            - reverseproxy
+        image: phpmyadmin/phpmyadmin
+        container_name: phpmyadmin
+        restart: always
+        #ports:
+         #   - 8000:80
+        environment:
+            PMA_ABSOLUTE_URI: http://your_server_name_or_ip_address/pma/
+            MYSQL_USER: kioskttdbuser
+            MYSQL_PASSWORD: DbYc5.24
+            MYSQL_ROOT_PASSWORD: DbYc5.24
+            PMA_HOST: db
+#volumes:
+#    persistent:
